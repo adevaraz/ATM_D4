@@ -9,23 +9,27 @@ package com.appl.atm.model;
  *
  * @author Annazar
  */
-public class Account {
+public interface Account {
     
-    private int accountNumber; // account number
+    /*private int accountNumber; // account number
     private int pin; // PIN for authentication
     private double availableBalance; // funds available for withdrawal
     private double totalBalance; // funds available & pending deposits
-
+    */
+    
     // Account constructor initializes attributes
+    /*
     public Account(int theAccountNumber, int thePIN, 
-	double theAvailableBalance, double theTotalBalance) {
-
+        double theAvailableBalance, double theTotalBalance) {
+        
 	accountNumber = theAccountNumber;
 	pin = thePIN;
 	availableBalance = theAvailableBalance;
 	totalBalance = theTotalBalance;
-    } 
-
+    }
+    */
+    
+    /*
     public void credit(double amount) {
         try{
 	totalBalance += amount;
@@ -38,17 +42,21 @@ public class Account {
 	availableBalance -= amount;
 	totalBalance -= amount;
     }
-
+    */
+    
     /**
      * @return the accountNumber
      */
+    /*
     public int getAccountNumber() {
         return accountNumber;
     }
+    */
 
     /**
      * @param accountNumber the accountNumber to set
      */
+    /*
     public void setAccountNumber(int accountNumber) {
         this.accountNumber = accountNumber;
     }
@@ -56,6 +64,7 @@ public class Account {
     /**
      * @return the pin
      */
+    /*
     public int getPin() {
         return pin;
     }
@@ -63,6 +72,7 @@ public class Account {
     /**
      * @param pin the pin to set
      */
+    /*
     public void setPin(int pin) {
         this.pin = pin;
     }
@@ -70,6 +80,7 @@ public class Account {
     /**
      * @return the availableBalance
      */
+    /*
     public double getAvailableBalance() {
         return availableBalance;
     }
@@ -77,6 +88,7 @@ public class Account {
     /**
      * @param availableBalance the availableBalance to set
      */
+    /*
     public void setAvailableBalance(double availableBalance) {
         this.availableBalance = availableBalance;
     }
@@ -84,6 +96,7 @@ public class Account {
     /**
      * @return the totalBalance
      */
+    /*
     public double getTotalBalance() {
         return totalBalance;
     }
@@ -91,8 +104,10 @@ public class Account {
     /**
      * @param totalBalance the totalBalance to set
      */
+    
     public void setTotalBalance(double totalBalance) {
         this.totalBalance = totalBalance;
     }
+    */
     
 }
