@@ -13,5 +13,4 @@ public interface Account {
     
     abstract int getAccountNumber();
     abstract int getPin();
-    
 }
