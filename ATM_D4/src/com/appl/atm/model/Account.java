@@ -105,6 +105,7 @@ public interface Account {
      * @param totalBalance the totalBalance to set
      */
     
+    /*
     public void setTotalBalance(double totalBalance) {
         this.totalBalance = totalBalance;
     }
