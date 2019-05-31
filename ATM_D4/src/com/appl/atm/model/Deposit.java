@@ -17,7 +17,8 @@ public class Deposit extends Transaction {
 
     private double amount; // amount to deposit
     private DepositSlot depositSlot; // reference to deposit slot
-
+    private boolean acceptedStatus;
+    
     // Deposit constructor
     public Deposit(int userAccountNumber, BankDatabase atmBankDatabase,
 	    DepositSlot atmDepositSlot) {
@@ -31,8 +32,11 @@ public class Deposit extends Transaction {
     public int execute() {
         BankDatabase bankDatabase = getBankDatabase();
 	Customer account = bankDatabase.getCustomer(getAccountNumber());
-	if (depositSlot.isEnvelopeReceived(bankDatabase.getList(),
-                account, amount, bankDatabase)) {
+        acceptedStatus = depositSlot.isEnvelopeReceived(bankDatabase.getList(),
+                account, amount, bankDatabase); 
+        
+        // Deposit successfull if deposit accepted by Admin
+        if (acceptedStatus) {
 	    account.credit(amount);
 	    return DEPOSIT_SUCCESSFUL;
 	} else {
@@ -40,30 +44,22 @@ public class Deposit extends Transaction {
 	}
     }
 
-    /**
-     * @return the amount
-     */
+    
     public double getAmount() {
 	return amount;
     }
 
-    /**
-     * @param amount the amount to set
-     */
+    
     public void setAmount(double amount) {
 	this.amount = amount;
     }
 
-    /**
-     * @return the depositSlot
-     */
+   
     public DepositSlot getDepositSlot() {
 	return depositSlot;
     }
 
-    /**
-     * @param depositSlot the depositSlot to set
-     */
+    
     public void setDepositSlot(DepositSlot depositSlot) {
 	this.depositSlot = depositSlot;
     }
