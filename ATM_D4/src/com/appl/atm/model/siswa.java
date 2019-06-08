@@ -4,40 +4,31 @@
  * and open the template in the editor.
  */
 package com.appl.atm.model;
-import com.appl.atm.view.Screen;
+
 /**
  *
- * @author asus
+ * @author Rayhan Azka  <rayhan.azka.tif418@polban.ac.id>
  */
-public class siswa extends Customer {
-    private Screen screen; // ATM's screen
-    private int userAccount; //user account
-    public final static int TFLIMIT_STUDENT = 60; 
-    public final static int WDLIMIT_STUDENT = 60;
-    private BankDatabase bankDatabase;
-    private CashDispenser cashDispenser;
-    public siswa(int userAccountNumber, BankDatabase atmBankDatabase,CashDispenser atmCashDispenser){
-        super();
-        userAccount = userAccountNumber;
+public class Siswa extends Customer {
+    private static final double DAILY_WITHDRAWAL_LIMIT = 20;
+    private static final double DAILY_TRANSFER_LIMIT = 0;
+    
+    public Siswa(int theAccountNumber, int thePIN, double theAvailableBalance, double theTotalBalance) {
+        super(theAccountNumber, thePIN, theAvailableBalance, theTotalBalance);
+    }
+
+    @Override
+    public double getDailyWithdrawalLimit() {
+        return DAILY_WITHDRAWAL_LIMIT;
+    }
+
+    @Override
+    public double getDailyTransferLimit() {
+        return DAILY_TRANSFER_LIMIT;
     }
     
-    public boolean validateWithdrawal(int amount){
-        screen = new Screen();
-    
-        if(amount<= WDLIMIT_STUDENT){
-            return true;
-        } else {
-            screen.displayMessageLine("you have exceeded the maximum withdrawal limit ($50)");
-            return false;
-        }
-    }
-    public boolean validateTransfer(int amount){
-        screen = new Screen();
-        if(amount<= TFLIMIT_STUDENT){
-            return true;
-        } else {
-            screen.displayMessageLine("you have exceeded the maximum transfer limit ($50)");
-            return false;
-        }
+    @Override
+    public boolean isSiswa(){
+        return true;
     }
 }
