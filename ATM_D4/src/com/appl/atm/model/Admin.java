@@ -1,35 +1,52 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.appl.atm.model;
 
-/**
- *
- * @author Ucang
- */
-public class Admin implements Account{
-    
-    private int AccountNumber;
-    private int Pin;
-    
+public class Admin implements IAccount {
+   private int accountNumber; // indicates account involved
+   private int pin;
+
+   public Admin(int userAccountNumber, int userPin) {
+
+      accountNumber = userAccountNumber;
+      pin = userPin;
+   }
+
+   public boolean isAdmin(int userAccountNumber, int userPin) {
+       return (userAccountNumber == this.accountNumber && userPin == this.pin);
+   }
+
+    /**
+     * @return the accountNumber
+     */
     @Override
     public int getAccountNumber() {
-        return AccountNumber;
+        return accountNumber;
+    }
+
+    /**
+     * @param accountNumber the accountNumber to set
+     */
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    /**
+     * @return the pin
+     */
+    @Override
+    public int getPin() {
+        return pin;
+    }
+
+    /**
+     * @param pin the pin to set
+     */
+    public void setPin(int pin) {
+        this.pin = pin;
     }
 
     @Override
-    public int getPin() {
-        return Pin;
+    public boolean isAdmin() {
+        return true; //To change body of generated methods, choose Tools | Templates.
     }
-    
-    public void setAccountNumber(int AccountNumber){
-        this.AccountNumber = AccountNumber;
-    }
-    
-    public void setPin(int Pin){
-        this.Pin = Pin;
-    }
-    
 }

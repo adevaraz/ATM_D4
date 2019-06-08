@@ -6,10 +6,14 @@ public class Keypad {
    private Scanner input; // reads data from the command line
                          
    public Keypad() {
-      input = new Scanner(System.in);    
+          input = new Scanner(System.in);    
    } 
 
    public int getInput() {
       return input.nextInt(); // user enters an integer
    } 
+   
+   public String getStr(){
+        return input.next();
+    }
 } 

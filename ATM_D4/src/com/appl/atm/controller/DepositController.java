@@ -6,6 +6,7 @@
 package com.appl.atm.controller;
 
 import static com.appl.atm.model.Constants.*;
+import com.appl.atm.model.Customer;
 import com.appl.atm.model.Deposit;
 import com.appl.atm.model.Transaction;
 import com.appl.atm.view.Keypad;
@@ -18,10 +19,14 @@ import com.appl.atm.view.Screen;
 public class DepositController extends TransactionController {
 
     private Deposit transaction;
+    private BankStatementController bankStatement;
+    private Customer customer;
 
     public DepositController(Transaction theTransaction, Keypad theKeypad, Screen theScreen) {
 	super(theKeypad, theScreen);
 	transaction = (Deposit) theTransaction;
+        customer = transaction.getBankDatabase().getCustomer(transaction.getAccountNumber());
+        bankStatement = new BankStatementController(theKeypad,theScreen,customer);
     }
 
     @Override
@@ -32,14 +37,19 @@ public class DepositController extends TransactionController {
 	    getScreen().displayMessageLine("Canceling transaction...");
 	} else {
 	    transaction.setAmount(amount);
-	    transaction.execute();
+	    int receive = transaction.execute();
 	    getScreen().displayMessage("Please insert a deposit envelope containing $");
 	    getScreen().displayDollarAmount(amount);
 	    getScreen().displayMessageLine("\n");
-	    getScreen().displayMessageLine("Your envelope has been received.");
-	    getScreen().displayMessageLine("NOTE: The money just deposited will not be available until we verify the amount of any enclosed cash and your checks clear.");
+            if(receive == DEPOSIT_SUCCESSFUL){
+                getScreen().displayMessageLine("Your envelope has been received.");
+                getScreen().displayMessageLine("NOTE: The money just deposited will not be available until we verify the amount of any enclosed cash and your checks clear.");
+                getScreen().displayMessageLine("check your balance to see the status of your previous deposit");
+                bankStatement.addLogDeposit(String.valueOf(customer.getAccountNumber()), amount, "Deposit", false);
+            } else {
+                getScreen().displayMessageLine("Your envelope is not received");
+            }
 	}
-	
 	return 0;
     }
 
