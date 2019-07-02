@@ -6,8 +6,10 @@
 package com.appl.atm.controller;
 
 import static com.appl.atm.model.Constants.*;
+import com.appl.atm.model.Customer;
 import com.appl.atm.model.Deposit;
 import com.appl.atm.model.Transaction;
+import com.appl.atm.view.DepositViewControler;
 import com.appl.atm.view.Keypad;
 import com.appl.atm.view.Screen;
 
@@ -18,30 +20,33 @@ import com.appl.atm.view.Screen;
 public class DepositController extends TransactionController {
 
     private Deposit transaction;
+    private BankStatementController bankStatement;
+    private Customer customer;
+    private DepositViewControler depositviewcontroler;
 
     public DepositController(Transaction theTransaction, Keypad theKeypad, Screen theScreen) {
 	super(theKeypad, theScreen);
 	transaction = (Deposit) theTransaction;
+        customer = transaction.getBankDatabase().getCustomer(transaction.getAccountNumber());
+        bankStatement = new BankStatementController(theKeypad,theScreen,customer);
+        depositviewcontroler = new DepositViewControler();
     }
 
     @Override
     public int run() {
-	double amount = promptForDepositAmount();
+	double amount = promptForDepositAmount(); // get return from method promptForDepositAmount()
 
 	if (amount == DEPOSIT_CANCELED) {
 	    getScreen().displayMessageLine("Canceling transaction...");
 	} else {
 	    transaction.setAmount(amount);
 	    int receive = transaction.execute();
-	    getScreen().displayMessage("Please insert a deposit envelope containing $");
-	    getScreen().displayDollarAmount(amount);
-	    getScreen().displayMessageLine("\n");
+	    depositviewcontroler.envelopeDeposit(amount);//print  the envelope deopsit to screen
             if(receive == DEPOSIT_SUCCESSFUL){
-                getScreen().displayMessageLine("Your envelope has been received.");
-                getScreen().displayMessageLine("NOTE: The money just deposited will not be available until we verify the amount of any enclosed cash and your checks clear.");
-                getScreen().displayMessageLine("check your balance to see the status of your previous deposit");
+                depositviewcontroler.envelopeReceived();//print to screen when the enveloped received
+                bankStatement.addLog("Deposit   ", 0.0, amount, "Verified : [" + false + "]");//menambahkan bankstatement ke akun customer setalah melakukan deposit 
             } else {
-                getScreen().displayMessageLine("Your envelope is not received");
+                depositviewcontroler.envelopednotReceiped();//print to screen when the enveloped not received
             }
 	}
 	return 0;
@@ -52,8 +57,7 @@ public class DepositController extends TransactionController {
 	Screen screen = getScreen(); // get reference to screen
 
 	// display the prompt
-	screen.displayMessage("\nPlease enter a deposit amount in "
-		+ "CENTS (or 0 to cancel): ");
+	depositviewcontroler.inputAmount();
 	int input = getKeypad().getInput(); // receive input of deposit amount
 
 	// check whether the user canceled or entered a valid amount

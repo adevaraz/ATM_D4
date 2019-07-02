@@ -1,1 +1,7 @@
-/ATM_D4/dist/
+# vscode
+.vscode
+
+# NetBeans (Ant)
+**/build/
+**/dist/
+**/nbproject/private
