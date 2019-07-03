@@ -14,7 +14,6 @@ import com.appl.atm.model.DepositSlot;
 import com.appl.atm.model.MasaDepan;
 import com.appl.atm.model.Siswa;
 import com.appl.atm.model.Transaction;
-import com.appl.atm.view.AdminViewController;
 import com.appl.atm.view.DepositViewControler;
 import com.appl.atm.view.Keypad;
 import com.appl.atm.view.Screen;
@@ -25,7 +24,7 @@ import java.util.HashMap;
  * @author Zara Veda
  */
 public class ConfirmDepositController extends TransactionController {
-    DepositSlot updateSlot;
+    DepositSlot depositSlot;
     BankDatabase bankDatabase;
     Keypad keypad;
     Screen screen;
@@ -33,32 +32,48 @@ public class ConfirmDepositController extends TransactionController {
     public ConfirmDepositController(DepositSlot theDepositSlot,
         BankDatabase theBankDatabase, Keypad theKeypad, Screen theScreen) {
         super(theKeypad, theScreen);
-        
-        updateSlot = theDepositSlot;
+
+        depositSlot = theDepositSlot;
         bankDatabase = theBankDatabase;
     }
-    
+
     public int run(){
         screen = getScreen();
         keypad = getKeypad();
         DepositViewControler screenView = new DepositViewControler();
-        
+
         /* Getting the list of deposit slot */
         HashMap<Customer, Double> theList = bankDatabase.getList();
-        
+
         screenView.showList(bankDatabase.getList());
-        screen.displayMessage("Choose the account number : ");
+        screen.displayMessage("\nChoose the account number (or 0 to cancel) : ");
         int choosen = keypad.getInput();
-        
-        bankStatement = new BankStatementController(keypad,screen,bankDatabase.getCustomer(choosen));
-        bankStatement.addLog("Deposit  ", 0.0, theList.get(bankDatabase.getCustomer(choosen)), "Verified : [" + true + "]");//menambahkan bankstatement ke akun customer karena deposit telah di confirm oleh admin
-        /* Deleting the deposit slot that accepted by admin */
-        updateSlot.deleteList(bankDatabase.getList(), bankDatabase.getCustomer(choosen),
-            bankDatabase);
-        
-        /* Showing the updated deposit slot */
-        screenView.showList(bankDatabase.getList());
-        
+
+        if(choosen != 0) {
+            if(theList.containsKey(bankDatabase.getCustomer(choosen))){
+                bankStatement = new BankStatementController(keypad,screen,bankDatabase.getCustomer(choosen));
+                double depositSize = theList.get(bankDatabase.getCustomer(choosen));
+                deleteSlot(bankDatabase, choosen);
+                bankStatement.addLog("Deposit  ", 0.0, depositSize, "Verified : [" + true + "]");
+            }
+            
+                
+            /* Showing the updated deposit slot */
+            screen.displayMessage("\n");
+            screenView.showList(bankDatabase.getList());
+        } else {
+            screen.displayMessageLine("Back to menu..");
+        }
+
         return 0;
+    }
+
+    private void deleteSlot(BankDatabase bankDatabase, int choosen) {
+        /* Slot tidak kosong
+         * Mendelete salah satu envelope yang diterima oleh admin
+         */
+
+        depositSlot.deleteList(bankDatabase.getList(), bankDatabase.getCustomer(choosen),
+            bankDatabase);
     }
 }

@@ -32,15 +32,21 @@ public class Deposit extends Transaction {
     public int execute() {
         BankDatabase bankDatabase = getBankDatabase();
 	Customer account = bankDatabase.getCustomer(getAccountNumber());
-	Boolean isEnvelopeReceived = depositSlot.isEnvelopeReceived(bankDatabase.getList(),
-                account, amount, bankDatabase);
 
-        if (isEnvelopeReceived) {
+//        Boolean isEnvelopeReceived = depositSlot.isEnvelopeReceived(bankDatabase.getList(),
+//                account, amount, bankDatabase);
+
+        if (isEnvelopeReceived(bankDatabase, account)) {
 	    account.credit(amount);
 	    return DEPOSIT_SUCCESSFUL;
 	} else {
 	    return ENVELOPE_IS_NOT_RECEIVED;
 	}
+    }
+
+    boolean isEnvelopeReceived(BankDatabase bankDatabase, Customer account) {
+        return  (depositSlot.isEnvelopeReceived(bankDatabase.getList(),
+            account, amount, bankDatabase));
     }
 
     public double getAmount() {
